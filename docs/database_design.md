@@ -60,12 +60,36 @@ Fields:
   uninstalledAt      Date        when they uninstalled, null if active
   plan               string      "free" | "starter" | "pro"
 
-  ## Collection: Analyses
+Collection: analyses
 
-Purpose: Have all the analitis form the faliers what we get form giving the falior to the ai
-           and this have a responce
+Purpose: Stores the AI-generated output for every 
+         CI failure Runforge processes
 
 Fields:
-  branch    string
-  Solution    strings
+  _id              ObjectId    auto-generated
   
+  // Reference
+  failureId        ObjectId    which failure this analysis belongs to
+  
+  // What AI returns (your words translated)
+  errorType        string      "dependency|test|build|network|timeout|permission|config"
+  rootCause        string      plain English explanation of why it failed
+  errorMessage     string      exact error line extracted from the log
+  fixSuggestions   array       list of possible fixes with details
+  bestFix          string      single highest confidence fix
+  severity         string      "critical|high|medium|low"
+  relatedFiles     array       files mentioned in the error
+  estimatedFixTime string      "5mins|30mins|2hours|unknown"
+  
+  // What your app needs
+  model            string      which AI model was used eg. "gemini-1.5-flash"
+  tokensUsed       number      for cost tracking
+  cached           boolean     was this from cache or fresh API call
+  confidence       string      "high|medium|low" — how sure the AI is
+  embedding        array       vector for similarity search (pattern detection)
+  createdAt        Date        when this analysis was generated
+
+Indexes:
+  { failureId: 1 }       to fetch analysis for a specific failure
+  { errorType: 1 }       to group by error type in dashboard
+  { createdAt: -1 }      to get recent analyses first
