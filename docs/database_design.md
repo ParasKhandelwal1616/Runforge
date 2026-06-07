@@ -4,12 +4,14 @@ Purpose: Stores every CI/CD failure Runforge processes
 
 Fields:
   _id              ObjectId   auto-generated
+  runId    number    GitHub Actions workflow run ID — used to fetch logs
   installationId   ObjectId   ref to installations collection
   repoFullName     string     "owner/repo" — GitHub format
   workflowName     string     name of the workflow that failed
   branch           string     git branch name
   prNumber         number     linked PR number, null if no PR
   commitSHA        string     40-char git commit hash
+  commentId    number    GitHub PR comment ID — for editing existing comment
   failedStep       string     name of the step that failed
   cleanedLog       string     processed log sent to AI
   startedAt        Date       when the run started
@@ -57,6 +59,7 @@ Fields:
   permissions        object      what permissions they granted
   installedAt        Date        when they installed
   isActive           boolean     false if they uninstalled
+  userId    ObjectId    ref to users collection — who installed this
   uninstalledAt      Date        when they uninstalled, null if active
   plan               string      "free" | "starter" | "pro"
 
@@ -79,6 +82,7 @@ Fields:
   bestFix          string      single highest confidence fix
   severity         string      "critical|high|medium|low"
   relatedFiles     array       files mentioned in the error
+  retryCount    number    how many times AI call was retried before success
   estimatedFixTime string      "5mins|30mins|2hours|unknown"
   
   // What your app needs
@@ -110,6 +114,7 @@ Fields:
   failureIds       array       ObjectIds of all failures in this pattern
   embedding        array       vector for similarity detection
   suggestedFix     string      recommended permanent fix
+  installationId    ObjectId    ref to installations collection
   isResolved       boolean     true if pattern no longer occurring
   resolvedAt       Date        when it was resolved, null if still active
 
