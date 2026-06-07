@@ -60,7 +60,7 @@ Fields:
   uninstalledAt      Date        when they uninstalled, null if active
   plan               string      "free" | "starter" | "pro"
 
-Collection: analyses
+## Collection: analyses
 
 Purpose: Stores the AI-generated output for every 
          CI failure Runforge processes
@@ -93,3 +93,29 @@ Indexes:
   { failureId: 1 }       to fetch analysis for a specific failure
   { errorType: 1 }       to group by error type in dashboard
   { createdAt: -1 }      to get recent analyses first
+
+Collection: patterns
+
+Purpose: Tracks recurring CI failures across a repo —
+         same error type happening multiple times,
+         used to alert developers about systemic issues
+
+Fields:
+  _id              ObjectId    auto-generated
+  repoFullName     string      which repo this pattern is in
+  errorType        string      type of error eg. "dependency|network"
+  occurrenceCount  number      how many times this error occurred
+  firstSeenAt      Date        when this pattern was first detected
+  lastSeenAt       Date        most recent occurrence
+  failureIds       array       ObjectIds of all failures in this pattern
+  embedding        array       vector for similarity detection
+  suggestedFix     string      recommended permanent fix
+  isResolved       boolean     true if pattern no longer occurring
+  resolvedAt       Date        when it was resolved, null if still active
+
+Indexes:
+  { repoFullName: 1 }           all patterns for a repo
+  { isResolved: 1 }             filter active vs resolved
+  { errorType: 1 }              group by error type
+  { lastSeenAt: -1 }            most recent patterns first
+  { repoFullName: 1, errorType: 1 }   compound — most common query
