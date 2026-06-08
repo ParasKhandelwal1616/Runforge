@@ -11,7 +11,7 @@ Fields:
   branch           string     git branch name
   prNumber         number     linked PR number, null if no PR
   commitSHA        string     40-char git commit hash
-  commentId    number    GitHub PR comment ID — for editing existing comment
+  commentId        number    GitHub PR comment ID — for editing existing comment
   failedStep       string     name of the step that failed
   cleanedLog       string     processed log sent to AI
   startedAt        Date       when the run started
@@ -44,7 +44,7 @@ Indexes:
   { githubId: 1 }   unique index — main lookup field
   { username: 1 }   for username search
 
-  ## Collection: installations
+## Collection: installations
 
 Purpose: Track every repo that has installed Runforge
          so we can make API calls on their behalf
@@ -59,7 +59,7 @@ Fields:
   permissions        object      what permissions they granted
   installedAt        Date        when they installed
   isActive           boolean     false if they uninstalled
-  userId    ObjectId    ref to users collection — who installed this
+  userId             ObjectId    ref to users collection — who installed this
   uninstalledAt      Date        when they uninstalled, null if active
   plan               string      "free" | "starter" | "pro"
 
@@ -98,7 +98,7 @@ Indexes:
   { errorType: 1 }       to group by error type in dashboard
   { createdAt: -1 }      to get recent analyses first
 
-Collection: patterns
+## Collection: patterns
 
 Purpose: Tracks recurring CI failures across a repo —
          same error type happening multiple times,
