@@ -1,0 +1,12 @@
+{
+  "name": "@runforge/db",
+  "version": "1.0.0",
+  "description": "Runforge database models",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {},
+  "dependencies": {
+    "mongoose": "^9.7.0"
+  }
+}
