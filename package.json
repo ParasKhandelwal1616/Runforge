@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "mongoose": "^9.7.0"
-  }
+  "name": "runforge",
+  "version": "1.0.0",
+  "description": "AI-powered CI/CD failure explainer",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {},
+  "keywords": [],
+  "author": "Paras Khandelwal",
+  "license": "ISC"
 }
