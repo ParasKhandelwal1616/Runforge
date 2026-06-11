@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
-
+import { env } from './env.js'
 const connectDB = async (): Promise<void> => {
   try {
-    const conn = await mongoose.connect('mongodb://localhost:27017/runforge')
+    const conn = await mongoose.connect(env.MONGODB_URI)
     console.log(`MongoDB connected: ${conn.connection.host}`)
   } catch (error) {
     console.error('MongoDB connection error:', error)

@@ -1,7 +1,9 @@
 import express from 'express'
 import connectDB from './config/db.js'
+import { env } from './config/env.js'
+
 const app = express()
-const PORT = 3001
+const PORT = env.PORT
 
 await connectDB()
 
