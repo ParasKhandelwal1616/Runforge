@@ -4,5 +4,7 @@ dotenv.config()
 export const env = {
   MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/runforge',
   PORT: process.env.PORT || 3001,
-  WEBHOOK_SECRET: process.env.WEBHOOK_SECRET || 'runforge_webhook_secret_local'
+  WEBHOOK_SECRET: process.env.WEBHOOK_SECRET || '',
+  GITHUB_APP_ID: process.env.GITHUB_APP_ID || '',
+  GITHUB_PRIVATE_KEY_PATH: process.env.GITHUB_PRIVATE_KEY_PATH || ''
 }
