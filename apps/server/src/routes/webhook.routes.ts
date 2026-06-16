@@ -17,7 +17,9 @@ router.post("/github", (req: Request, res: Response) => {
   }
 
   // signature is valid — tell GitHub we received it
-  res.status(200).json({ message: "Webhook received" });
+  res.status(200).json({ message: 'Webhook received' })
+
+console.log(`📦 Webhook received: ${req.headers['x-github-event']}`)
   // event workflow_run
 
   const eventType = req.headers["x-github-event"];

@@ -9,7 +9,11 @@ const PORT = env.PORT
 
 await connectDB()
 
-app.use(express.json())
+app.use(express.json({
+  verify: (req: any, res, buf) => {
+    req.rawBody = buf
+  }
+}))
 app.use('/webhooks', webhookRouter)
 
 
