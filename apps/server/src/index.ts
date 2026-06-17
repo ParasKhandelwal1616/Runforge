@@ -2,12 +2,15 @@ import express from 'express'
 import connectDB from './config/db.js'
 import { env } from './config/env.js'
 import webhookRouter from './routes/webhook.routes.js'
+import { createFailureWorker } from '@runforge/queue'
 
 
 const app = express()
 const PORT = env.PORT
 
 await connectDB()
+createFailureWorker()
+console.log('🔧 Failure worker started')
 
 app.use(express.json({
   verify: (req: any, res, buf) => {

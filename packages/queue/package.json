@@ -1,0 +1,12 @@
+{
+  "name": "@runforge/queue",
+  "version": "1.0.0",
+  "description": "Runforge job queue",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {},
+  "dependencies": {
+    "bullmq": "^5.78.1"
+  }
+}
