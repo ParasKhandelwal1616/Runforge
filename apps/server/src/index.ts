@@ -3,6 +3,7 @@ import connectDB from './config/db.js'
 import { env } from './config/env.js'
 import webhookRouter from './routes/webhook.routes.js'
 import { createFailureWorker } from '@runforge/queue'
+import { initGithubApp } from '@runforge/github'
 
 
 const app = express()
@@ -11,6 +12,9 @@ const PORT = env.PORT
 await connectDB()
 createFailureWorker()
 console.log('🔧 Failure worker started')
+
+initGithubApp(env.GITHUB_APP_ID, env.GITHUB_PRIVATE_KEY_PATH)
+console.log('🐙 GitHub App initialized')
 
 app.use(express.json({
   verify: (req: any, res, buf) => {
