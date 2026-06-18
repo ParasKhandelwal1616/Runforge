@@ -5,10 +5,17 @@ const connection = {
   port: 6379
 }
 
-export const createFailureWorker = () => {
+type TokenFetcher = (installationId: number) => Promise<string>
+
+export const createFailureWorker = (getToken: TokenFetcher) => {
   const worker = new Worker('failure-analysis', async (job: Job) => {
     console.log(`Processing job ${job.id}:`, job.data)
-    // TODO: fetch logs, call AI, post PR comment
+    
+    const { installationId, repoFullName, runId } = job.data
+    
+    const token = await getToken(installationId)
+    console.log(`🔑 Got token for installation: ${installationId}`)
+    
   }, { connection })
 
   worker.on('completed', (job) => {
