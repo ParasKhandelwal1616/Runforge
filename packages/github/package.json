@@ -8,6 +8,10 @@
   "scripts": {},
   "dependencies": {
     "@octokit/app": "^16.1.2",
-    "@octokit/rest": "^22.0.1"
+    "@octokit/rest": "^22.0.1",
+    "unzipper": "^0.12.3"
+  },
+  "devDependencies": {
+    "@types/unzipper": "^0.10.11"
   }
 }
