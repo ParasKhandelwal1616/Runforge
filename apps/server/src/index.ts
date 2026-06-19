@@ -4,7 +4,7 @@ import { env } from './config/env.js'
 import webhookRouter from './routes/webhook.routes.js'
 import { createFailureWorker } from '@runforge/queue'
 import { initGithubApp } from '@runforge/github'
-import { getInstallationToken, fetchFailureLogs } from '@runforge/github'
+import { getInstallationToken, fetchFailureLogs , cleanLog } from '@runforge/github'
 
 
 const app = express()
@@ -17,7 +17,8 @@ createFailureWorker(
     env.GITHUB_APP_ID,
     env.GITHUB_PRIVATE_KEY_PATH
   ),
-  fetchFailureLogs
+  fetchFailureLogs ,
+  cleanLog
 )
 console.log('🔧 Failure worker started')
 

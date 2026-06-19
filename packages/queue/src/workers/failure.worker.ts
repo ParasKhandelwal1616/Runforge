@@ -9,7 +9,7 @@ const connection = {
 type TokenFetcher = (installationId: number) => Promise<string>
 type LogFetcher = (owner: string, repo: string, runId: number, token: string) => Promise<string>
 
-export const createFailureWorker = (getToken: TokenFetcher, fetchLogs: LogFetcher) => {
+export const createFailureWorker = (getToken: TokenFetcher, fetchLogs: LogFetcher , cleanLog: (log: string) => string) => {
   const worker = new Worker('failure-analysis', async (job: Job) => {
     console.log(`Processing job ${job.id}:`, job.data)
     
@@ -21,6 +21,9 @@ export const createFailureWorker = (getToken: TokenFetcher, fetchLogs: LogFetche
 
     const logs = await fetchLogs(owner, repo, runId, token)
 console.log(`📋 Logs fetched — length: ${logs.length} chars`)
+
+    const cleanedLog = cleanLog(logs)
+console.log(`🧹 Cleaned log — length: ${cleanedLog.length} chars`)
     
   }, { connection })
 
