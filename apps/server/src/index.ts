@@ -21,7 +21,7 @@ createFailureWorker(
   fetchFailureLogs ,
   cleanLog,
   analyseLog,
-  env.GEMINI_API_KEY
+  env.GROQ_API_KEY
 )
 console.log('🔧 Failure worker started')
 

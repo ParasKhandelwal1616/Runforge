@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import Groq from 'groq-sdk'
 
 const SYSTEM_PROMPT = `You are a CI/CD expert analyzing GitHub Actions failure logs.
 Analyze the log and respond ONLY with valid JSON matching this exact schema:
@@ -24,18 +24,23 @@ export const analyseLog = async (
   cleanedLog: string,
   apiKey: string
 ): Promise<object> => {
-  const genAI = new GoogleGenerativeAI(apiKey)
-  
-  const model = genAI.getGenerativeModel({
-   model: 'gemini-2.0-flash',
-    systemInstruction: SYSTEM_PROMPT
+  const groq = new Groq({ apiKey })
+
+  const completion = await groq.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: cleanedLog }
+    ],
+    temperature: 0.1,
+    max_tokens: 1024,
+    response_format: { type: 'json_object' }
   })
 
-  const result = await model.generateContent(cleanedLog)
-  const text = result.response.text()
+  const text = completion.choices[0]?.message?.content || ''
   
   console.log('🤖 AI response received')
-  
+
   try {
     const parsed = JSON.parse(text)
     return parsed
