@@ -1,0 +1,1 @@
+export { analyseLog } from './analyser.js'

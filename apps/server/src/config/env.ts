@@ -6,5 +6,6 @@ export const env = {
   PORT: process.env.PORT || 3001,
   WEBHOOK_SECRET: process.env.WEBHOOK_SECRET || '',
   GITHUB_APP_ID: process.env.GITHUB_APP_ID || '',
-  GITHUB_PRIVATE_KEY_PATH: process.env.GITHUB_PRIVATE_KEY_PATH || ''
+  GITHUB_PRIVATE_KEY_PATH: process.env.GITHUB_PRIVATE_KEY_PATH || '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || ''
 }

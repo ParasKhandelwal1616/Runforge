@@ -9,7 +9,15 @@ const connection = {
 type TokenFetcher = (installationId: number) => Promise<string>
 type LogFetcher = (owner: string, repo: string, runId: number, token: string) => Promise<string>
 
-export const createFailureWorker = (getToken: TokenFetcher, fetchLogs: LogFetcher , cleanLog: (log: string) => string) => {
+type Analyser = (log: string, apiKey: string) => Promise<object>
+
+export const createFailureWorker = (
+  getToken: TokenFetcher,
+  fetchLogs: LogFetcher,
+  cleanLog: (log: string) => string,
+  analyseLog: Analyser,
+  geminiApiKey: string
+) => {
   const worker = new Worker('failure-analysis', async (job: Job) => {
     console.log(`Processing job ${job.id}:`, job.data)
     
@@ -24,6 +32,9 @@ console.log(`📋 Logs fetched — length: ${logs.length} chars`)
 
     const cleanedLog = cleanLog(logs)
 console.log(`🧹 Cleaned log — length: ${cleanedLog.length} chars`)
+
+const analysis = await analyseLog(cleanedLog, geminiApiKey)
+console.log('🤖 Analysis:', JSON.stringify(analysis, null, 2))
     
   }, { connection })
 

@@ -5,6 +5,7 @@ import webhookRouter from './routes/webhook.routes.js'
 import { createFailureWorker } from '@runforge/queue'
 import { initGithubApp } from '@runforge/github'
 import { getInstallationToken, fetchFailureLogs , cleanLog } from '@runforge/github'
+import { analyseLog } from '@runforge/ai'
 
 
 const app = express()
@@ -18,7 +19,9 @@ createFailureWorker(
     env.GITHUB_PRIVATE_KEY_PATH
   ),
   fetchFailureLogs ,
-  cleanLog
+  cleanLog,
+  analyseLog,
+  env.GEMINI_API_KEY
 )
 console.log('🔧 Failure worker started')
 
