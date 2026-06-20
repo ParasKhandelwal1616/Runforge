@@ -4,7 +4,7 @@ import { env } from './config/env.js'
 import webhookRouter from './routes/webhook.routes.js'
 import { createFailureWorker } from '@runforge/queue'
 import { initGithubApp } from '@runforge/github'
-import { getInstallationToken, fetchFailureLogs , cleanLog } from '@runforge/github'
+import { getInstallationToken, fetchFailureLogs , cleanLog , extractFailedStep} from '@runforge/github'
 import { analyseLog } from '@runforge/ai'
 
 
@@ -20,6 +20,7 @@ createFailureWorker(
   ),
   fetchFailureLogs ,
   cleanLog,
+  extractFailedStep,
   analyseLog,
   env.GROQ_API_KEY
 )

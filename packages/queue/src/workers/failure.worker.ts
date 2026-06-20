@@ -5,7 +5,7 @@ const connection = {
   host: 'localhost',
   port: 6379
 }
-
+type StepExtractor = (log: string) => string
 type TokenFetcher = (installationId: number) => Promise<string>
 type LogFetcher = (owner: string, repo: string, runId: number, token: string) => Promise<string>
 
@@ -20,6 +20,7 @@ export const createFailureWorker = (
   getToken: TokenFetcher,
   fetchLogs: LogFetcher,
   cleanLog: (log: string) => string,
+  extractFailedStep: StepExtractor,
   analyseLog: Analyser,
   geminiApiKey: string
 ) => {
@@ -37,6 +38,10 @@ console.log(`📋 Logs fetched — length: ${logs.length} chars`)
 
     const cleanedLog = cleanLog(logs)
 console.log(`🧹 Cleaned log — length: ${cleanedLog.length} chars`)
+
+
+const failedStep = extractFailedStep(cleanedLog)
+console.log(`❌ Failed step: ${failedStep}`)
 
 const analysis = await analyseLog(cleanedLog, geminiApiKey, {
   repoFullName,

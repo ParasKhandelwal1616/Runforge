@@ -36,15 +36,18 @@ router.post("/github", async (req: Request, res: Response) => {
     // this is a real failure — log it for now
     console.log("CI failure detected:", payload.workflow_run.name);
 
-    await failureQueue.add("analyze-failure", {
-      installationId: payload.installation.id,
-      repoFullName: payload.workflow_run.repository?.full_name,
-      runId: payload.workflow_run.id,
-      commitSHA: payload.workflow_run.head_sha,
-      prNumber: payload.workflow_run.pull_requests[0]?.number || null,
-      workflowName: payload.workflow_run.name,
-       branch: payload.workflow_run.head_branch
-    });
+  await failureQueue.add('analyze-failure', {
+  installationId: payload.installation.id,
+  repoFullName: payload.workflow_run.repository?.full_name,
+  runId: payload.workflow_run.id,
+  commitSHA: payload.workflow_run.head_sha,
+  prNumber: payload.workflow_run.pull_requests[0]?.number || null,
+  workflowName: payload.workflow_run.name,
+  branch: payload.workflow_run.head_branch,
+  startedAt: payload.workflow_run.created_at,
+  failedAt: payload.workflow_run.updated_at,
+  retryCount: payload.workflow_run.run_attempt - 1
+})
 
     console.log(`🔥 Job added to queue for: ${payload.workflow_run.name}`);
   }
