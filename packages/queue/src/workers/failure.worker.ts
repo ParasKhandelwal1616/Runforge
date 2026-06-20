@@ -6,6 +6,7 @@ const connection = {
   port: 6379
 }
 type StepExtractor = (log: string) => string
+type postComment = (token: string, owner: string, repo: string, prNumber: number, analysis: any) => Promise<string>
 type TokenFetcher = (installationId: number) => Promise<string>
 type LogFetcher = (owner: string, repo: string, runId: number, token: string) => Promise<string>
 type Saver = (jobData: any, failedStep: string, cleanedLog: string, analysis: any) => Promise<any>
@@ -23,7 +24,8 @@ export const createFailureWorker = (
   extractFailedStep: StepExtractor,
   analyseLog: Analyser,
   geminiApiKey: string,
-  saveFailure: Saver
+  saveFailure: Saver,
+  postComment: postComment
 ) => {
   const worker = new Worker('failure-analysis', async (job: Job) => {
     console.log(`Processing job ${job.id}:`, job.data)
@@ -53,6 +55,11 @@ const analysis = await analyseLog(cleanedLog, geminiApiKey, {
 console.log('🤖 Analysis:', JSON.stringify(analysis, null, 2))
 
 await saveFailure(job.data, failedStep, cleanedLog, analysis)
+
+if (prNumber) {
+  const commentId = await postComment(token, owner, repo, prNumber, analysis)
+  console.log(`💬 Comment posted: ${commentId}`)
+}
     
   }, { connection })
 
