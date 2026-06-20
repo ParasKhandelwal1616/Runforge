@@ -22,7 +22,13 @@ No text outside the JSON. No markdown backticks.`
 
 export const analyseLog = async (
   cleanedLog: string,
-  apiKey: string
+  apiKey: string,
+  context: {
+    repoFullName: string
+    workflowName: string
+    branch?: string
+    prNumber?: number | null
+  }
 ): Promise<object> => {
   const groq = new Groq({ apiKey })
 
