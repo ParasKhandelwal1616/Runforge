@@ -8,7 +8,7 @@ const connection = {
 type StepExtractor = (log: string) => string
 type TokenFetcher = (installationId: number) => Promise<string>
 type LogFetcher = (owner: string, repo: string, runId: number, token: string) => Promise<string>
-
+type Saver = (jobData: any, failedStep: string, cleanedLog: string, analysis: any) => Promise<any>
 type Analyser = (log: string, apiKey: string, context: {
   repoFullName: string
   workflowName: string
@@ -22,7 +22,8 @@ export const createFailureWorker = (
   cleanLog: (log: string) => string,
   extractFailedStep: StepExtractor,
   analyseLog: Analyser,
-  geminiApiKey: string
+  geminiApiKey: string,
+  saveFailure: Saver
 ) => {
   const worker = new Worker('failure-analysis', async (job: Job) => {
     console.log(`Processing job ${job.id}:`, job.data)
@@ -50,6 +51,8 @@ const analysis = await analyseLog(cleanedLog, geminiApiKey, {
   prNumber
 })
 console.log('🤖 Analysis:', JSON.stringify(analysis, null, 2))
+
+await saveFailure(job.data, failedStep, cleanedLog, analysis)
     
   }, { connection })
 

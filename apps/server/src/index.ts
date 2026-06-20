@@ -6,6 +6,7 @@ import { createFailureWorker } from '@runforge/queue'
 import { initGithubApp } from '@runforge/github'
 import { getInstallationToken, fetchFailureLogs , cleanLog , extractFailedStep} from '@runforge/github'
 import { analyseLog } from '@runforge/ai'
+import { saveFailureAndAnalysis } from './services/failure.service.js'
 
 
 const app = express()
@@ -22,7 +23,8 @@ createFailureWorker(
   cleanLog,
   extractFailedStep,
   analyseLog,
-  env.GROQ_API_KEY
+  env.GROQ_API_KEY,
+  saveFailureAndAnalysis
 )
 console.log('🔧 Failure worker started')
 

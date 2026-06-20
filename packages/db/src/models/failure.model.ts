@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const failureSchema = new mongoose.Schema({
     runId: { type: Number, required: true },
-    installationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Installation', required: true },
+    installationId: { type: Number, required: true },
     repoFullName: { type: String, required: true },
     workflowName: { type: String, required: true },
     branch: { type: String, required: true },
