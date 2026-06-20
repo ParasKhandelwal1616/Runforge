@@ -43,6 +43,7 @@ router.post("/github", async (req: Request, res: Response) => {
       commitSHA: payload.workflow_run.head_sha,
       prNumber: payload.workflow_run.pull_requests[0]?.number || null,
       workflowName: payload.workflow_run.name,
+       branch: payload.workflow_run.head_branch
     });
 
     console.log(`🔥 Job added to queue for: ${payload.workflow_run.name}`);

@@ -30,13 +30,22 @@ export const analyseLog = async (
     prNumber?: number | null
   }
 ): Promise<object> => {
+    const userMessage = `
+Repository: ${context.repoFullName}
+Workflow: ${context.workflowName}
+Branch: ${context.branch || 'unknown'}
+PR Number: ${context.prNumber || 'not linked to a PR'}
+
+Failed Log:
+${cleanedLog}
+`
   const groq = new Groq({ apiKey })
 
   const completion = await groq.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },
-      { role: 'user', content: cleanedLog }
+      { role: 'user', content: userMessage }
     ],
     temperature: 0.1,
     max_tokens: 1024,
