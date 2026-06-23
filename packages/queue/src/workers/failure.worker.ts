@@ -6,7 +6,7 @@ const connection = {
   port: 6379
 }
 type StepExtractor = (log: string) => string
-type postComment = (token: string, owner: string, repo: string, prNumber: number, analysis: any) => Promise<string>
+type postComment = (token: string, owner: string, repo: string, prNumber: number, analysis: any) => Promise<number>
 type TokenFetcher = (installationId: number) => Promise<string>
 type LogFetcher = (owner: string, repo: string, runId: number, token: string) => Promise<string>
 type Saver = (jobData: any, failedStep: string, cleanedLog: string, analysis: any) => Promise<any>

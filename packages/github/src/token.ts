@@ -4,9 +4,10 @@ import fs from 'fs'
 export const getInstallationToken = async (
   installationId: number,
   appId: string,
-  privateKeyPath: string
+  privateKeyContent: string  // ← key content, not path
 ): Promise<string> => {
-  const privateKey = fs.readFileSync(privateKeyPath, 'utf8')
+  // NEW — key content passed directly
+const privateKey = privateKeyContent
   
   const app = new App({ appId, privateKey })
   

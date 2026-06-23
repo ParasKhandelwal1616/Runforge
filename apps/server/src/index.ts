@@ -18,7 +18,7 @@ createFailureWorker(
   (installationId) => getInstallationToken(
     installationId,
     env.GITHUB_APP_ID,
-    env.GITHUB_PRIVATE_KEY_PATH
+    env.GITHUB_PRIVATE_KEY
   ),
   fetchFailureLogs ,
   cleanLog,
@@ -30,7 +30,7 @@ createFailureWorker(
 )
 console.log('🔧 Failure worker started')
 
-initGithubApp(env.GITHUB_APP_ID, env.GITHUB_PRIVATE_KEY_PATH)
+initGithubApp(env.GITHUB_APP_ID, env.GITHUB_PRIVATE_KEY)
 console.log('🐙 GitHub App initialized')
 
 app.use(express.json({
