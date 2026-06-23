@@ -83,6 +83,8 @@ try {
   throw new Error(`Failed to save to database: ${error}`)
 }
 
+
+
 if (prNumber) {
   try {
     const commentId = await postComment(token, owner, repo, prNumber, analysis)
