@@ -1,14 +1,9 @@
 {
   "name": "runforge",
-  "version": "1.0.0",
-  "description": "AI-powered CI/CD failure explainer",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {},
-  "keywords": [],
-  "author": "Paras Khandelwal",
-  "license": "ISC"
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "build": "npm run build --workspace=apps/server",
+    "start": "node apps/server/dist/index.js"
+  }
 }
