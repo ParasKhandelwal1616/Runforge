@@ -3,7 +3,7 @@
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "npm run build --workspace=apps/server",
-    "start": "node apps/server/dist/index.js"
-  }
+  "build": "npm run build --workspaces --if-present",
+  "start": "node apps/server/dist/index.js"
+}
 }
