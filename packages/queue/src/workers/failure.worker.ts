@@ -33,32 +33,66 @@ export const createFailureWorker = (
 const { installationId, repoFullName, runId, workflowName, branch, prNumber } = job.data
     const [owner, repo] = repoFullName.split('/')
     
-    const token = await getToken(installationId)
-    console.log(`🔑 Got token for installation: ${installationId}`)
+    let token: string
+try {
+  token = await getToken(installationId)
+  console.log(`🔑 Got token for installation: ${installationId}`)
+} catch (error) {
+  throw new Error(`Failed to get installation token: ${error}`)
+}
 
-    const logs = await fetchLogs(owner, repo, runId, token)
-console.log(`📋 Logs fetched — length: ${logs.length} chars`)
+    let logs: string
+try {
+  logs = await fetchLogs(owner, repo, runId, token)
+  console.log(`📋 Logs fetched — length: ${logs.length} chars`)
+} catch (error) {
+  throw new Error(`Failed to fetch logs: ${error}`)
+}
 
-    const cleanedLog = cleanLog(logs)
-console.log(`🧹 Cleaned log — length: ${cleanedLog.length} chars`)
+    let cleanedLog: string
+try {
+  cleanedLog = cleanLog(logs)
+  console.log(`🧹 Cleaned log — length: ${cleanedLog.length} chars`)
+} catch (error) {
+  throw new Error(`Failed to clean log: ${error}`)
+}
 
+    let failedStep: string
+try {
+  failedStep = extractFailedStep(cleanedLog)
+  console.log(`❌ Failed step: ${failedStep}`)
+} catch (error) {
+  throw new Error(`Failed to extract failed step: ${error}`)
+}
 
-const failedStep = extractFailedStep(cleanedLog)
-console.log(`❌ Failed step: ${failedStep}`)
-
-const analysis = await analyseLog(cleanedLog, geminiApiKey, {
-  repoFullName,
-  workflowName,
-  branch,
-  prNumber
-})
+    let analysis: any
+try {
+  analysis = await analyseLog(cleanedLog, geminiApiKey, {
+    repoFullName,
+    workflowName,
+    branch,
+    prNumber
+  })
+} catch (error) {
+  throw new Error(`Failed to analyse log: ${error}`)
+} 
 console.log('🤖 Analysis:', JSON.stringify(analysis, null, 2))
+try {
+  await saveFailure(job.data, failedStep, cleanedLog, analysis)
+} catch (error) {
+  throw new Error(`Failed to save to database: ${error}`)
+}
 
-await saveFailure(job.data, failedStep, cleanedLog, analysis)
+
 
 if (prNumber) {
-  const commentId = await postComment(token, owner, repo, prNumber, analysis)
-  console.log(`💬 Comment posted: ${commentId}`)
+  try {
+    const commentId = await postComment(token, owner, repo, prNumber, analysis)
+    console.log(`💬 Comment posted: ${commentId}`)
+  } catch (error) {
+    console.error(`⚠️ Failed to post comment (non-critical): ${error}`)
+    // don't throw — job still succeeded
+  }
 }
     
   }, { connection })

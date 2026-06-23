@@ -5,4 +5,15 @@ const connection = {
     port : 6379
 }
 
-export const failureQueue = new Queue('failure-analysis', {connection});
+export const failureQueue = new Queue('failure-analysis', {
+  connection,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 5000
+    },
+    removeOnComplete: 100,
+    removeOnFail: 50
+  }
+})
