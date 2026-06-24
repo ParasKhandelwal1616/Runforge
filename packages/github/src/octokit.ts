@@ -1,11 +1,8 @@
 import { App } from '@octokit/app'
-import fs from 'fs'
 
 let githubApp: App
 
-export const initGithubApp = (appId: string, privateKeyPath: string) => {
-  const privateKey = fs.readFileSync(privateKeyPath, 'utf8')
-  
+export const initGithubApp = (appId: string, privateKey: string) => {
   githubApp = new App({
     appId,
     privateKey
