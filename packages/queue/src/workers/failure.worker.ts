@@ -1,10 +1,10 @@
 import { Worker, Job } from 'bullmq'
 
 
-const connection = {
-  host: 'localhost',
-  port: 6379
-}
+const connection = process.env.REDIS_URL
+  ? { url: process.env.REDIS_URL }
+  : { host: 'localhost', port: 6379 } 
+  
 type StepExtractor = (log: string) => string
 type postComment = (token: string, owner: string, repo: string, prNumber: number, analysis: any) => Promise<number>
 type TokenFetcher = (installationId: number) => Promise<string>
