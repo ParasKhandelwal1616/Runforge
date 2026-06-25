@@ -19,8 +19,7 @@ export const createFailureIssue = async (
       owner,
       repo,
       title,
-      body,
-      labels: ['ci-failure']
+      body
     }
   )
 
