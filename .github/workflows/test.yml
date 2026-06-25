@@ -16,5 +16,5 @@ jobs:
       
       - name: Run tests
         run: |
-          echo "Running fresh failure pr review test..."
+          echo "Running fresh failure pr deployment review test..."
           exit 1
