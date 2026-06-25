@@ -8,6 +8,7 @@ import { getInstallationToken, fetchFailureLogs , cleanLog , extractFailedStep} 
 import { analyseLog } from '@runforge/ai'
 import { saveFailureAndAnalysis } from './services/failure.service.js'
 import {postPRComment} from '@runforge/github'
+import { createFailureIssue } from '@runforge/github'
 
 
 const app = express()
@@ -26,7 +27,8 @@ createFailureWorker(
   analyseLog,
   env.GROQ_API_KEY,
   saveFailureAndAnalysis ,
-  postPRComment
+  postPRComment,
+  createFailureIssue
 )
 console.log('🔧 Failure worker started')
 

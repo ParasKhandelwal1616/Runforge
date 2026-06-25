@@ -5,6 +5,7 @@ const connection = process.env.REDIS_URL
   ? { url: process.env.REDIS_URL }
   : { host: 'localhost', port: 6379 } 
   
+type IssuecreAtor = (token: string, owner: string, repo: string, analysis: any, workflowName: string, branch: string) => Promise<number>  
 type StepExtractor = (log: string) => string
 type postComment = (token: string, owner: string, repo: string, prNumber: number, analysis: any) => Promise<number>
 type TokenFetcher = (installationId: number) => Promise<string>
@@ -25,7 +26,8 @@ export const createFailureWorker = (
   analyseLog: Analyser,
   geminiApiKey: string,
   saveFailure: Saver,
-  postComment: postComment
+  postComment: postComment,
+  createIssue: IssuecreAtor 
 ) => {
   const worker = new Worker('failure-analysis', async (job: Job) => {
     console.log(`Processing job ${job.id}:`, job.data)
@@ -90,8 +92,14 @@ if (prNumber) {
     const commentId = await postComment(token, owner, repo, prNumber, analysis)
     console.log(`💬 Comment posted: ${commentId}`)
   } catch (error) {
-    console.error(`⚠️ Failed to post comment (non-critical): ${error}`)
-    // don't throw — job still succeeded
+    console.error(`⚠️ Failed to post comment: ${error}`)
+  }
+} else {
+  try {
+    const issueNumber = await createIssue(token, owner, repo, analysis, workflowName, branch)
+    console.log(`🐛 Issue created: #${issueNumber}`)
+  } catch (error) {
+    console.error(`⚠️ Failed to create issue: ${error}`)
   }
 }
     
